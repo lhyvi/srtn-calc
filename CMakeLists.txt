@@ -60,6 +60,8 @@ target_link_libraries(srtn-calc_exe
 	$<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
 	$<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
 )
+
+set_property(TARGET srtn-calc_exe PROPERTY WIN32_EXECUTABLE true)
 # ---- Install rules ----
 
 if(NOT CMAKE_SKIP_INSTALL_RULES)

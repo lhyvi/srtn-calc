@@ -10,7 +10,7 @@
       "name": "dev-mode",
       "hidden": true,
       "cacheVariables": {
-        "imgui-test_DEVELOPER_MODE": "ON",
+        "srtn-calc_DEVELOPER_MODE": "ON",
         "VCPKG_MANIFEST_FEATURES": "test"
       }
     },
@@ -150,6 +150,20 @@
     {
       "name": "ci-windows",
       "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg", "vcpkg-win64-static"]
-    }
+    },
+	{
+      "name": "r-windows",
+      "inherits": ["ci-build", "ci-win64", "vcpkg", "vcpkg-win64-static"]
+    },
+	{
+	  "name": "release-vcpkg",
+	  "description": "Release build preset with vcpkg",
+	  "hidden": false,
+	  "inherits": ["ci-build", "ci-win64", "vcpkg", "vcpkg-win64-static"],
+	  "cacheVariables": {
+		"CMAKE_BUILD_TYPE": "Release",
+		"CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+	  }
+	}
   ]
 }
