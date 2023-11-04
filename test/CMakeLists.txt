@@ -17,7 +17,16 @@ target_link_libraries(
     srtn-calc_lib
     Catch2::Catch2WithMain
 )
-target_compile_features(srtn-calc_test PRIVATE cxx_std_17)
+target_link_libraries(srtn-calc_test PRIVATE OpenGL::GL)
+target_link_libraries(srtn-calc_test PRIVATE srtn-calc_lib)
+target_link_libraries(srtn-calc_test PRIVATE imgui::imgui)
+target_link_libraries(srtn-calc_test
+	PRIVATE
+	$<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+	$<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+)
+
+target_compile_features(srtn-calc_test PRIVATE cxx_std_20)
 
 catch_discover_tests(srtn-calc_test)
 

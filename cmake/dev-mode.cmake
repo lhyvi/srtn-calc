@@ -7,10 +7,10 @@ endif()
 
 add_custom_target(
     run-exe
-    COMMAND imgui-test_exe
+    COMMAND srtn-calc_exe
     VERBATIM
 )
-add_dependencies(run-exe imgui-test_exe)
+add_dependencies(run-exe srtn-calc_exe)
 
 option(BUILD_MCSS_DOCS "Build documentation using Doxygen and m.css" OFF)
 if(BUILD_MCSS_DOCS)
