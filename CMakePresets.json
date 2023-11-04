@@ -162,8 +162,9 @@
 	  "inherits": ["ci-build", "ci-win64", "vcpkg", "vcpkg-win64-static"],
 	  "cacheVariables": {
 		"CMAKE_BUILD_TYPE": "Release",
-		"CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+		"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
 	  }
 	}
+
   ]
 }
