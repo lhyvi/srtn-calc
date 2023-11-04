@@ -35,6 +35,7 @@ int main(int, char**)
 
     static bool window_open = true;
     static SRTN srtn_state {};
+    srtn_state.resize(1);
 
     while (!app.done) {
         if (!window_open) {
@@ -52,6 +53,7 @@ int main(int, char**)
             if (table_cols < 1)
                 table_cols = 1;
             srtn_state.resize(table_cols);
+            srtn_state.calculate();
         }
 
         bool changed_srtn = false;
@@ -84,6 +86,8 @@ int main(int, char**)
 
         ImGui::EndTable();
 
+        ImGui::Separator();
+
         ImGui::Text("Gantt Chart");
         const auto& gantt_chart = srtn_state.gantt_chart;
         ImGui::BeginTable("Gantt", std::max<size_t>(gantt_chart.size(), 1), table_flags);
@@ -101,6 +105,49 @@ int main(int, char**)
         }
 
         ImGui::EndTable();
+
+        ImGui::Separator();
+
+        ImGui::BeginTable("WaT", 2, table_flags);
+
+        ImGui::TableNextRow();
+        ImGui::TableNextColumn();
+        ImGui::Text("Process ID");
+        ImGui::TableNextColumn();
+        ImGui::Text("Waiting Time");
+        for (int row = 0; row < srtn_state.processes.size(); ++row) {
+            Process &process = srtn_state.processes[row];
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("P%d", process.id);
+            ImGui::TableNextColumn();
+            ImGui::Text("%d", process.wait_time);
+        }
+        ImGui::EndTable();
+        ImGui::Text("Total Waiting Time: %.0f", srtn_state.total_waiting_time);
+        ImGui::Text("Average Waiting Time: %.02f", srtn_state.average_waiting_time);
+
+        ImGui::Separator();
+
+        ImGui::BeginTable("WaT", 2, table_flags);
+
+        ImGui::TableNextRow();
+        ImGui::TableNextColumn();
+        ImGui::Text("Process ID");
+        ImGui::TableNextColumn();
+        ImGui::Text("Turn-Around Time");
+        for (int row = 0; row < srtn_state.processes.size(); ++row) {
+            Process &process = srtn_state.processes[row];
+            ImGui::TableNextRow();
+            ImGui::TableNextColumn();
+            ImGui::Text("P%d", process.id);
+            ImGui::TableNextColumn();
+            ImGui::Text("%d", process.turn_around_time);
+        }
+        ImGui::EndTable();
+
+        ImGui::Text("Total Turn-Around Time: %.0f", srtn_state.total_turn_around_time);
+        ImGui::Text("Average Turn-Around Time: %.02f", srtn_state.avarege_turn_around_time);
 
         ImGui::End();
 

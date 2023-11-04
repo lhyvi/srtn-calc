@@ -12,8 +12,10 @@ public:
 	int burst_time{1};
 	int remaining_time{};
 
+	int start_time{};
 	int wait_time{};
 	int end_time{};
+	int turn_around_time{};
 
 
 	Process(int id=0, int arrival_time=0, int burst_time=1);
