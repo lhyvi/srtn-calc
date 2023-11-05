@@ -19,6 +19,4 @@ public:
 
 
 	Process(int id=0, int arrival_time=0, int burst_time=1);
-
-	friend bool operator<(const Process& a, const Process& b);
 };

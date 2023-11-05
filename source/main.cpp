@@ -1,12 +1,3 @@
-// Dear ImGui: standalone example application for SDL2 + OpenGL
-// (SDL is a cross-platform general purpose library for handling windows, inputs, OpenGL/Vulkan/Metal graphics context creation, etc.)
-
-// Learn about Dear ImGui:
-// - FAQ                  https://dearimgui.com/faq
-// - Getting Started      https://dearimgui.com/getting-started
-// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
-// - Introduction, links and more at the top of imgui.cpp
-
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_opengl3.h"
@@ -28,36 +19,44 @@
 // Main code
 int main(int, char**)
 {
-
+    // Initialize app instance
     AppContext app = AppContext();
-    auto io = app.getIO();
     auto table_flags = ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders;
 
+    // Program state variables
     static bool window_open = true;
     static SRTN srtn_state {};
     srtn_state.resize(1);
 
+    // Main app loop
     while (!app.done) {
-        if (!window_open) {
+        if (!window_open) { // window_open turns false when the x button on the window is pressed
             app.done = true;
             continue;
         }
+        // Start the current frame
         app.poll_events();
         app.start_frame();
 
 
-        ImGui::Begin("SRTN Calculator", &window_open);                          // Create a window called "Hello, world!" and append into it.
+        // Begin appending to window
+        ImGui::Begin("SRTN Calculator", &window_open);
 
-        static int table_cols = 1;
-        if(ImGui::InputInt("Table Cols", &table_cols)) {
-            if (table_cols < 1)
-                table_cols = 1;
-            srtn_state.resize(table_cols);
+        // Keep track of the amount of process the user wants
+        static int process_count = 1;
+        if( ImGui::InputInt("Process Count", &process_count) ) { // Returns true if user has input
+            if (process_count < 1) // Don't allow process_count that is less than one
+                process_count = 1;
+
+            // Resize SRTN state and recalculate
+            srtn_state.resize(static_cast<size_t>(process_count));
             srtn_state.calculate();
         }
 
+        // Keep track of if user changes info about processes
         bool changed_srtn = false;
 
+        // Display Processes and the input for their info
         ImGui::Text("Processes");
         ImGui::BeginTable("Process Table", 3, table_flags);
         ImGui::TableNextRow();
@@ -67,20 +66,26 @@ int main(int, char**)
         ImGui::Text("Arrival Time");
         ImGui::TableNextColumn();
         ImGui::Text("Burst Time");
-        for (int row = 0; row < srtn_state.processes.size(); ++row) {
+
+        // Loop through each process and show and get input for their info
+        for (unsigned int row = 0; row < srtn_state.processes.size(); ++row) {
             Process *process = &(srtn_state.processes[row]);
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
             ImGui::Text("P%d", process->id);
             ImGui::TableNextColumn();
+
+            // Get input for process arrival_time and burst_time
             if (ImGui::InputInt(std::format("{}at", row + 1).c_str(), &process->arrival_time))
                 changed_srtn = true;
-			if (process->arrival_time < 0)
+			if (process->arrival_time < 0) // arrival_time cant be less than 0
 				process->arrival_time = 0;
+
             ImGui::TableNextColumn();
+
             if (ImGui::InputInt(std::format("{}bt", row + 1).c_str(), &process->burst_time))
                 changed_srtn = true;
-			if (process->burst_time < 1)
+			if (process->burst_time < 1) // burst_time cant be less than 1
 				process->burst_time = 1;
         }
 
@@ -88,14 +93,16 @@ int main(int, char**)
 
         ImGui::Separator();
 
+        // Display Gantt Chart
         ImGui::Text("Gantt Chart");
-        const auto& gantt_chart = srtn_state.gantt_chart;
-        ImGui::BeginTable("Gantt", std::max<size_t>(gantt_chart.size(), 1), table_flags);
+
+        const auto& gantt_chart = srtn_state.gantt_chart; // Make a reference variable for conciseness
+        ImGui::BeginTable("Gantt", std::max<int>(static_cast<int>(gantt_chart.size()), 1), table_flags);
 
         for (int row = 0; row < 2; row++) {
             ImGui::TableNextRow();
-            for (int col = 0; col < gantt_chart.size(); ++col) {
-                ImGui::TableSetColumnIndex(col);
+            for (unsigned int col = 0; col < gantt_chart.size(); ++col) {
+                ImGui::TableSetColumnIndex(static_cast<int>(col));
                 if (row == 0) {
                     ImGui::Text("P%d", gantt_chart[col].id);
                 } else {
@@ -108,6 +115,9 @@ int main(int, char**)
 
         ImGui::Separator();
 
+        // Display Waiting Time of each Process
+
+        ImGui::Text("Waiting Time = Turn-Around Time - Burst Time");
         ImGui::BeginTable("WaT", 2, table_flags);
 
         ImGui::TableNextRow();
@@ -115,7 +125,7 @@ int main(int, char**)
         ImGui::Text("Process ID");
         ImGui::TableNextColumn();
         ImGui::Text("Waiting Time");
-        for (int row = 0; row < srtn_state.processes.size(); ++row) {
+        for (unsigned int row = 0; row < srtn_state.processes.size(); ++row) {
             Process &process = srtn_state.processes[row];
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
@@ -129,14 +139,17 @@ int main(int, char**)
 
         ImGui::Separator();
 
-        ImGui::BeginTable("WaT", 2, table_flags);
+        // Display Turn-Around Time of each Process
+
+        ImGui::Text("Turn-Around Time = End Time - Arrival Time");
+        ImGui::BeginTable("TaT", 2, table_flags);
 
         ImGui::TableNextRow();
         ImGui::TableNextColumn();
         ImGui::Text("Process ID");
         ImGui::TableNextColumn();
         ImGui::Text("Turn-Around Time");
-        for (int row = 0; row < srtn_state.processes.size(); ++row) {
+        for (unsigned int row = 0; row < srtn_state.processes.size(); ++row) {
             Process &process = srtn_state.processes[row];
             ImGui::TableNextRow();
             ImGui::TableNextColumn();
@@ -151,9 +164,10 @@ int main(int, char**)
 
         ImGui::End();
 
-        if (changed_srtn)
+        if (changed_srtn) // If user changed info about processes, recalculate
             srtn_state.calculate();
 
+        // End the current frame
         app.end_frame();
     }
 

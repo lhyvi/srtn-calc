@@ -2,7 +2,9 @@
 
 #include <fmt/core.h>
 
-AppContext::AppContext() : done(false) {
+AppContext::AppContext() : 
+    done(false), frame_start(0), frame_time(0)
+{
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
     {
         printf("Error: %s\n", SDL_GetError());
@@ -34,7 +36,6 @@ AppContext::AppContext() : done(false) {
     this->io = &ImGui::GetIO(); (void)io;
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       
     io->ConfigViewportsNoAutoMerge = true;
 
@@ -79,6 +80,7 @@ void AppContext::poll_events() {
 }
 
 void AppContext::start_frame() {
+    frame_start = SDL_GetTicks();
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
@@ -91,6 +93,13 @@ void AppContext::end_frame() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     SDL_GL_SwapWindow(this->window);
+
+    frame_time = SDL_GetTicks() - frame_start;
+
+    if(frame_delay > frame_time)
+    {
+        SDL_Delay(frame_delay - frame_time);
+    }
 }
 
 ImGuiIO &AppContext::getIO() {
