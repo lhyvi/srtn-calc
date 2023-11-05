@@ -27,7 +27,7 @@ void SRTN::calculate() {
     // Setup calculation variables
     int current_time = 0;
     size_t next_idx = 0; // Used to keep track of the next process to calculate
-    Process zero_process = Process(); // Used to show P0 (when the first process has arrived)
+    Process zero_process = Process(); // Process with id 0 is used when nothing is running
     Process *current_process = &zero_process;  // Holds the currently executing process
 
     // Keep calculating while queue isn't empty or there are processes that havent arrived yet
@@ -60,6 +60,8 @@ void SRTN::calculate() {
                 // If the process hasn't ended yet, add back to the queue
                 pq.push(next_process);
             }
+        } else { // If the queue is empty that means there are no processes needed to be run
+            current_process = &zero_process;
         }
 
         // Increment time
@@ -82,12 +84,24 @@ void SRTN::calculate() {
 
     // Remove duplicates from gantt chart
 
-    // cmp is a lambda function that compares the gantt chart's data time
-	auto cmp = [](const ChartData& a, const ChartData& b) { return a.time < b.time; };
-    // Make a set that uses the cmp lambda for comparison
-	std::set<ChartData, decltype(cmp)> s( gantt_chart.begin(), gantt_chart.end() );
-    // Assign the set to the resulting gantt chart
-	gantt_chart.assign( s.begin(), s.end() );
+    // Make a new vector to hold the filtered gantt chart
+	std::vector<ChartData> filtered_gantt_chart{};
+
+    for (ChartData data : gantt_chart) {
+        if (data.id == 0) // Don't include zero_process
+            continue;
+        
+        // If the data is a duplicate, don't include it
+        if (!filtered_gantt_chart.empty()
+            && filtered_gantt_chart.back().id == data.id
+            && filtered_gantt_chart.back().time == data.time
+            )
+            continue;
+
+        // Push data onto the filtered gantt chart
+        filtered_gantt_chart.push_back(data);
+    }
+	gantt_chart = filtered_gantt_chart;
 
     // Calculate average
     average_waiting_time = total_waiting_time / ps.size();
