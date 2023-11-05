@@ -49,7 +49,6 @@ void SRTN::calculate() {
             if (current_process->id != next_process.id ) {
                 gantt_chart.push_back({current_process->id, current_time});
                 current_process = &next_process;
-                next_process.start_time = current_time;
             }
 
             if (next_process.remaining_time == 0) {
@@ -105,7 +104,7 @@ void SRTN::calculate() {
 
     // Calculate average
     average_waiting_time = total_waiting_time / ps.size();
-    avarege_turn_around_time = total_turn_around_time / ps.size();
+    average_turn_around_time = total_turn_around_time / ps.size();
 }
 
 

@@ -21,7 +21,7 @@ public:
 	float total_waiting_time{};
 	float total_turn_around_time{};
 	float average_waiting_time{};
-	float avarege_turn_around_time{};
+	float average_turn_around_time{};
 
 	void calculate();
 	void resize(size_t new_size);

@@ -160,7 +160,7 @@ int main(int, char**)
         ImGui::EndTable();
 
         ImGui::Text("Total Turn-Around Time: %.0f", srtn_state.total_turn_around_time);
-        ImGui::Text("Average Turn-Around Time: %.02f", srtn_state.avarege_turn_around_time);
+        ImGui::Text("Average Turn-Around Time: %.02f", srtn_state.average_turn_around_time);
 
         ImGui::End();
 
