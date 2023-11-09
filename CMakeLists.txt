@@ -27,9 +27,6 @@ target_include_directories(
 
 target_compile_features(srtn-calc_lib PUBLIC cxx_std_20)
 
-find_package(fmt REQUIRED)
-target_link_libraries(srtn-calc_lib PRIVATE fmt::fmt)
-
 find_package(OpenGL REQUIRED)
 target_link_libraries(srtn-calc_lib PRIVATE OpenGL::GL)
 
@@ -50,7 +47,7 @@ add_executable(srtn-calc::exe ALIAS srtn-calc_exe)
 
 set_property(TARGET srtn-calc_exe PROPERTY OUTPUT_NAME srtn-calc)
 
-target_compile_features(srtn-calc_exe PRIVATE cxx_std_17)
+target_compile_features(srtn-calc_exe PRIVATE cxx_std_20)
 
 target_link_libraries(srtn-calc_exe PRIVATE OpenGL::GL)
 target_link_libraries(srtn-calc_exe PRIVATE srtn-calc_lib)

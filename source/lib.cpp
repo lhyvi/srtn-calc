@@ -1,7 +1,5 @@
 #include "lib.hpp"
 
-#include <fmt/core.h>
-
 AppContext::AppContext() : 
     done(false), frame_start(0), frame_time(0)
 {

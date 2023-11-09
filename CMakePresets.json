@@ -152,11 +152,15 @@
       "inherits": ["ci-build", "ci-win64", "dev-mode", "vcpkg", "vcpkg-win64-static"]
     },
 	{
-      "name": "r-windows",
-      "inherits": ["ci-build", "ci-win64", "vcpkg", "vcpkg-win64-static"]
+      "name": "d-windows",
+      "inherits": ["ci-build", "ci-win64", "vcpkg", "vcpkg-win64-static"],
+	  "cacheVariables": {
+		"CMAKE_BUILD_TYPE": "Debug",
+		"CMAKE_EXPORT_COMPILE_COMMANDS": "YES"
+	  }
     },
 	{
-	  "name": "release-vcpkg",
+	  "name": "release-windows",
 	  "description": "Release build preset with vcpkg",
 	  "hidden": false,
 	  "inherits": ["ci-build", "ci-win64", "vcpkg", "vcpkg-win64-static"],
