@@ -11,30 +11,24 @@ srtn-calc is a program that calculates Shortest Remaining Time Next (SRTN) for a
 The following dependencies are required to build the program on Windows:
 - CMake 3.14.0 or later
 - [vcpkg](https://github.com/microsoft/vcpkg)
-- Visual Studio 2022
 
-# Build Instructions
+Library dependencies, are specified in the vcpkg.json file. You can choose to use vcpkg for automatic installation or install them manually.
 
-**Windows Build Instructions:**
+# Building with VCPKG
 
-Clone the repository:
 ```bat
 git clone https://github.com/lhyvi/srtn-calc.git
+cd srtn-calc
 ```
-Navigate to the project directory:
-```bat
-cd srtn-calculator
+For Windows:
 ```
-Run CMake to generate the build files with the "release-windows" preset:
-```bat
-cmake . --preset "release-windows"
+cmake -B build -S . -D "CMAKE_TOOLCHAIN_FILE=%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake"
 ```
-Navigate to the build directory:
-```bat
-cd build
+For Unix-based:
+```
+cmake -B build -S . -D "CMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake"
 ```
 Build the project using the generated build files:
 ```bat
-cmake --build . --config Release
+cmake --build build
 ```
-After building the project, the built binary will be located in the `Release/` folder.
