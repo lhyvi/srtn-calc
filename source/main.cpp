@@ -13,7 +13,6 @@
 #include "process.hpp"
 #include "srtn.hpp"
 #include <iostream>
-#include <format>
 #include <string>
 
 // Main code
@@ -76,14 +75,14 @@ int main(int, char**)
             ImGui::TableNextColumn();
 
             // Get input for process arrival_time and burst_time
-            if (ImGui::InputInt(std::format("{}at", row + 1).c_str(), &process->arrival_time))
+			if (ImGui::InputInt((std::to_string(row + 1) + "at").c_str(), &process->arrival_time))
                 changed_srtn = true;
 			if (process->arrival_time < 0) // arrival_time cant be less than 0
 				process->arrival_time = 0;
 
             ImGui::TableNextColumn();
 
-            if (ImGui::InputInt(std::format("{}bt", row + 1).c_str(), &process->burst_time))
+			if (ImGui::InputInt((std::to_string(row + 1) + "bt").c_str(), &process->burst_time))
                 changed_srtn = true;
 			if (process->burst_time < 1) // burst_time cant be less than 1
 				process->burst_time = 1;
